@@ -2,7 +2,7 @@
 
 Entre toda la clase vamos a pintar un sprite de *Realm of the Mad God*, celda a celda, usando Git y GitHub: cada celda es una *pull request*.
 
-**Mira cómo va el dibujo:** `https://scontreraslopez.github.io/pixel-ede-wars-2026/`
+**Mira cómo va el dibujo:** `https://scontreraslopez.github.io/pixel-war-ede-2026/`
 
 ## Reglas
 
