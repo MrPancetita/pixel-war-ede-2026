@@ -1,0 +1,57 @@
+name: pixelbot
+
+on:
+  # Revisión inmediata cuando se abre o se actualiza una PR.
+  # pull_request_target se ejecuta con el código de la rama principal (de confianza),
+  # no con el de la PR, y no necesita que apruebes las ejecuciones de forks nuevos.
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  # Repaso periódico de todas las PR abiertas: fusiona las que estaban esperando
+  # (cooldown, día siguiente) y detecta conflictos nuevos tras cada fusión.
+  schedule:
+    - cron: "*/15 * * * *"
+  # Botón "Run workflow" para lanzarlo a mano.
+  workflow_dispatch:
+
+permissions:
+  contents: write       # fusionar PR
+  pull-requests: write  # leer PR y fusionarlas
+  issues: write         # comentarios y etiquetas
+  actions: write        # lanzar el despliegue de GitHub Pages
+
+concurrency:
+  group: pixelbot
+  cancel-in-progress: false
+
+jobs:
+  pixelbot:
+    runs-on: ubuntu-latest
+    steps:
+      # IMPORTANTE: se descarga la rama principal, NUNCA la rama de la PR.
+      # Con pull_request_target, ejecutar código de la PR daría permisos de escritura a cualquiera.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - id: bot
+        run: python .github/pixelbot/pixelbot.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ALUMNOS: ${{ vars.ALUMNOS }}
+          MAX_PR_FASE1: ${{ vars.MAX_PR_FASE1 }}
+          DIAS_ENTRE_PR_FASE1: ${{ vars.DIAS_ENTRE_PR_FASE1 }}
+          FECHA_SPRINT: ${{ vars.FECHA_SPRINT }}
+          COOLDOWN_SPRINT_MIN: ${{ vars.COOLDOWN_SPRINT_MIN }}
+          SABOTAJE_CADA_MIN: ${{ vars.SABOTAJE_CADA_MIN }}
+          SABOTAJE_MAX: ${{ vars.SABOTAJE_MAX }}
+
+      # Las fusiones y sabotajes hechos con GITHUB_TOKEN no disparan otros workflows "on: push",
+      # así que el despliegue de la página se lanza explícitamente.
+      - if: steps.bot.outputs.cambios != '0'
+        run: gh workflow run pages.yml --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

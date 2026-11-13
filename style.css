@@ -1,0 +1,83 @@
+/* Generado por herramientas/generar_lienzo.py. Los colores salen de objetivo.js. */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: system-ui, sans-serif;
+  background: #f4f4f6;
+  color: #1d1d24;
+}
+
+.tablero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.lienzo {
+  display: grid;
+  grid-template-columns: repeat(var(--n), var(--celda, 32px));
+  border: 1px solid #c8c8d0;
+  width: max-content;
+  background:
+    repeating-conic-gradient(#e6e6ea 0% 25%, #fafafa 0% 50%) 0 0 / 16px 16px;
+}
+
+.objetivo { --celda: 16px; }
+
+.cell {
+  width: var(--celda, 32px);
+  height: var(--celda, 32px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.cell.resaltada { outline: 3px solid #1e88e5; outline-offset: -3px; }
+
+/* Celdas con un color que no toca (las marca guia.js) */
+.cell.incorrecta {
+  background-image: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.45) 0 2px, transparent 2px 6px);
+}
+
+#paleta {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 4px 16px;
+}
+
+#paleta span {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border: 1px solid #0003;
+}
+
+@media (max-width: 600px) {
+  .lienzo { --celda: 18px; }
+  .objetivo { --celda: 10px; }
+}
+
+/* Paleta: las 18 clases de color que puede usar el alumnado */
+.negro { background-color: #15151f; }
+.gris-oscuro { background-color: #282a36; }
+.gris { background-color: #8a8f98; }
+.plata { background-color: #b8bfcf; }
+.blanco { background-color: #ffffff; }
+.amarillo { background-color: #f0cb5d; }
+.oro { background-color: #d9a04a; }
+.ocre { background-color: #87703b; }
+.naranja { background-color: #f28c28; }
+.rojo { background-color: #fa291e; }
+.granate { background-color: #a61122; }
+.rosa { background-color: #f48fb1; }
+.morado { background-color: #7e57c2; }
+.azul { background-color: #1e88e5; }
+.celeste { background-color: #81d4fa; }
+.verde { background-color: #43a047; }
+.marron { background-color: #a15428; }
+.marron-oscuro { background-color: #6e2d15; }
