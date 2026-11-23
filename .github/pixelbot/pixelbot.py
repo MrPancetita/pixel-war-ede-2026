@@ -314,7 +314,10 @@ def procesar(pr, ctx):
     # toca antes la misma celda en main, así que la PR tiene conflicto y hay que resolverlo.
     if (CONFLICTO_DESDE_PR and len(ctx.historial.get(autor, [])) + 1 >= CONFLICTO_DESDE_PR
             and not comentado(numero, f"conflicto-forzado:{numero}")):
-        malo = random.choice([c for c in COLORES_SABOTAJE if c != color])
+        # Distinto del color de la PR y del que ya tiene la celda en main: si coincidiera con este
+        # último, el commit no cambiaría la línea y no habría conflicto real.
+        actual = ctx.lienzo.get((fila, col))
+        malo = random.choice([c for c in COLORES_SABOTAJE if c not in (color, actual)])
         if pintar_mal(ctx, fila, col, malo, PREFIJO_SABOTAJE_DIRIGIDO):
             ctx.sabotajes_dirigidos += 1
             poner_estado(pr, "conflicto")
