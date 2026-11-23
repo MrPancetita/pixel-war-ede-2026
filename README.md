@@ -117,10 +117,10 @@ Son **variables del repositorio**, no secretos: *Settings → Secrets and variab
 | `FECHA_SPRINT` | (sin sprint) | `AAAA-MM-DD`. Desde ese día no hay límite de celdas, solo cooldown. |
 | `COOLDOWN_SPRINT_MIN` | `60` | Minutos entre celdas durante el sprint. |
 | `SABOTAJE_CADA_MIN` | (sin sabotaje) | Como mucho un sabotaje aleatorio cada N minutos (solo en ejecuciones programadas o manuales). |
-| `SABOTAJE_MAX` | `5` | Si ya hay N celdas incorrectas en `main`, no sabotea más hasta que se arreglen. |
+| `SABOTAJE_MAX` | `5` | Si ya hay N celdas incorrectas en `main`, no sabotea más hasta que se arreglen. Es un tope de celdas incorrectas **a la vez**, no de sabotajes en total. El sabotaje aleatorio solo pinta celdas **vacías**, así que nunca estropea una celda que ya estaba bien. |
 | `CONFLICTO_DESDE_PR` | (desactivado) | A partir de la PR número N de cada alumno, **todas** sus PR reciben un conflicto forzado. Con `2` y `MAX_PR_FASE1=2`, la segunda celda de cada alumno tiene conflicto seguro (y, en el sprint, todas las siguientes). |
 
-Configuración del curso 2026-27: `MAX_PR_FASE1=2`, `DIAS_ENTRE_PR_FASE1=2`, `SABOTAJE_CADA_MIN=15`, `CONFLICTO_DESDE_PR=2`.
+Configuración del curso 2026-27: `MAX_PR_FASE1=2`, `DIAS_ENTRE_PR_FASE1=2`, `SABOTAJE_CADA_MIN=15`, `SABOTAJE_MAX=40`, `CONFLICTO_DESDE_PR=2`.
 
 ### Cómo decide el bot
 
