@@ -19,6 +19,10 @@ Entre toda la clase vamos a pintar un sprite de *Realm of the Mad God*, celda a 
 
 ## Cómo pintar una celda
 
+> [!IMPORTANT]
+> Sigue por favor esta mini-guía paso a paso. Si no, el bot no podrá fusionar tu PR y tendrás que arreglarlo tú.
+> celda 5-7 es un ejemplo: cambia el número de celda y el color por los que tú quieras pintar.
+
 1. Haz un **fork** de este repositorio y clónalo. Lo más cómodo es hacerlo todo de una vez con `gh repo fork scontreraslopez/pixel-war-ede-2026 --clone`, que además te deja configurado el remoto `upstream`. Si haces el fork desde la web, añádelo tú después de clonar:
 
     ```bash
@@ -58,6 +62,10 @@ Abrir la PR **no significa que tu celda esté pintada**. Tu PR queda pendiente d
 - **En unos minutos** el bot la revisa y te deja un comentario y una etiqueta (mira la tabla de abajo).
 - Si queda **en espera**, se fusionará sola cuando te toque. El bot repasa las PR pendientes de vez en cuando, y **a veces tarda varias horas**: no te preocupes si se fusiona más tarde de la hora que te dijo.
 - **Mientras tu PR siga abierta, puede cambiar de estado.** Si otra persona o el saboteador cambian tu celda o la de al lado, tu PR pasará a tener un **conflicto** que tendrás que resolver tú. Si no lo resuelves, tu celda no entra nunca.
+- **Después de resolver un conflicto y hacer `push`**, lo normal es que el bot fusione tu PR al momento. Pero a veces se queda en cola hasta la siguiente revisión automática, que **puede tardar varias horas**. Mientras tanto puede seguir teniendo la etiqueta `conflicto`: si ya lo has resuelto, ten paciencia.
+
+> [!NOTE]
+> Esta es la **primera versión** del juego y el bot puede fallar. Si algo se queda atascado, no te preocupes: revisaré a mano las PR afectadas hasta que lo arregle. Tú asegúrate de haber hecho bien tu parte.
 
 > [!WARNING]
 > ¡Asegúrate de que tu PR ha sido aceptada! Puede tardar un rato, y seguramente alguna vez fallará algo. Es muy importante que compruebes que tu PR se ha aceptado e integrado en el proyecto, porque si no, no podré calificarte positivamente la actividad.
@@ -109,10 +117,10 @@ Son **variables del repositorio**, no secretos: *Settings → Secrets and variab
 | `FECHA_SPRINT` | (sin sprint) | `AAAA-MM-DD`. Desde ese día no hay límite de celdas, solo cooldown. |
 | `COOLDOWN_SPRINT_MIN` | `60` | Minutos entre celdas durante el sprint. |
 | `SABOTAJE_CADA_MIN` | (sin sabotaje) | Como mucho un sabotaje aleatorio cada N minutos (solo en ejecuciones programadas o manuales). |
-| `SABOTAJE_MAX` | `5` | Si ya hay N celdas incorrectas en `main`, no sabotea más hasta que se arreglen. |
+| `SABOTAJE_MAX` | `5` | Si ya hay N celdas incorrectas en `main`, no sabotea más hasta que se arreglen. Es un tope de celdas incorrectas **a la vez**, no de sabotajes en total. El sabotaje aleatorio solo pinta celdas **vacías**, así que nunca estropea una celda que ya estaba bien. |
 | `CONFLICTO_DESDE_PR` | (desactivado) | A partir de la PR número N de cada alumno, **todas** sus PR reciben un conflicto forzado. Con `2` y `MAX_PR_FASE1=2`, la segunda celda de cada alumno tiene conflicto seguro (y, en el sprint, todas las siguientes). |
 
-Configuración del curso 2026-27: `MAX_PR_FASE1=2`, `DIAS_ENTRE_PR_FASE1=2`, `SABOTAJE_CADA_MIN=15`, `CONFLICTO_DESDE_PR=2`.
+Configuración del curso 2026-27: `MAX_PR_FASE1=2`, `DIAS_ENTRE_PR_FASE1=2`, `SABOTAJE_CADA_MIN=15`, `SABOTAJE_MAX=40`, `CONFLICTO_DESDE_PR=2`.
 
 ### Cómo decide el bot
 
