@@ -22,6 +22,7 @@ import json
 import os
 import random
 import re
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -247,7 +248,11 @@ Al resolverlo, **tu celda** tiene que quedar con tu cambio y **todas las demás*
 
 Si `upstream` no existe, créalo antes: `git remote add upstream https://github.com/{repo}.git`
 
-Si la celda que querías ya la ha arreglado otra persona, elige otra. Cuando hagas `push`, volveré a revisar tu PR."""
+Cuando hayas resuelto el conflicto en tu repositorio, haz `git push` a la rama de esta PR (**no abras otra PR**): la PR se actualizará sola y volveré a comprobar automáticamente si ya se puede fusionar. Normalmente la fusiono al momento, pero a veces se queda en cola hasta la siguiente revisión automática, que puede tardar **varias horas**: si ya lo has resuelto, ten paciencia aunque siga la etiqueta `conflicto`.
+
+Esta es la primera versión del juego: si me quedo atascado, el profesor revisará tu PR a mano.
+
+Si la celda que querías ya la ha arreglado otra persona, elige otra."""
 
 
 # --- Proceso ---------------------------------------------------------------
@@ -327,9 +332,17 @@ def procesar(pr, ctx):
             print(f"#{numero}: conflicto forzado en ({fila}, {col}) ({autor})")
         return
 
-    detalle = get(f"/repos/{REPO}/pulls/{numero}")
+    # Justo después de un push, GitHub tarda unos segundos en calcular si hay conflictos
+    # (mergeable = None). Se reintenta un poco antes de dejarlo para la próxima ejecución,
+    # que con el cron de GitHub puede tardar horas.
+    for intento in range(6):
+        detalle = get(f"/repos/{REPO}/pulls/{numero}")
+        if detalle["mergeable"] is not None:
+            break
+        time.sleep(5)
     if detalle["mergeable"] is None:
-        return  # GitHub aún está calculando si hay conflictos: se mira en la próxima ejecución
+        print(f"#{numero}: GitHub aún no sabe si se puede fusionar; se reintentará en la próxima ejecución.")
+        return
     if not detalle["mergeable"]:
         poner_estado(pr, "conflicto")
         comentar_una_vez(numero, f"conflicto:{sha}", MENSAJE_CONFLICTO.format(repo=REPO))
